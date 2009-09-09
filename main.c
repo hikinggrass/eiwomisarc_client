@@ -28,7 +28,7 @@ int split(char str[], int size, char *rueck[])
 {	
 	char *p;
 
-	printf ("Split \"%s\" in tokens:\n", str);
+	printf ("Split \"%s\" in tokens:\n", str); //debug
 	
 	p = strtok (str,",");
 	
@@ -37,7 +37,7 @@ int split(char str[], int size, char *rueck[])
 	while ( (p != NULL) && (i < size) )
 	{
 		rueck[i] = p;
-		printf ("%s\n", p);
+		printf ("%s\n", p); //debug
 		p = strtok (NULL, " ,");
 		i++;
 	}
@@ -48,38 +48,36 @@ void fillsending(int val, int ch, unsigned char psending[]){
 	//value
 	
 	if(val>254){
-		psending[1] = 254; //Wert1
-		psending[2] = 1;   //Wert2
+		psending[1] = 254; //Values1
+		psending[2] = 1;   //Values2
 	}else{
-		psending[1] = val; //Wert1
-		psending[2] = 0;   //Wert2
+		psending[1] = val; //Values1
+		psending[2] = 0;   //Values2
 	}
 	
 	//channel
 	if(ch>512){
-		psending[3] = 254;		//Kanal1
-		psending[4] = 254;		//Kanal2
-		psending[5] = 4;		//Kanal3
+		psending[3] = 254;		//Channel1
+		psending[4] = 254;		//Channel2
+		psending[5] = 4;		//Channel3
 	}else if(ch>508){
-		psending[3] = 254;		//Kanal1
-		psending[4] = 254;		//Kanal2
-		psending[5] = ch-508;	//Kanal3
+		psending[3] = 254;		//Channel1
+		psending[4] = 254;		//Channel2
+		psending[5] = ch-508;	//Channel3
 	}else if(ch>254){
-		psending[3] = 254;		//Kanal1
-		psending[4] = ch-254;	//Kanal2
-		psending[5] = 0;		//Kanal3
+		psending[3] = 254;		//Channel1
+		psending[4] = ch-254;	//Channel2
+		psending[5] = 0;		//Channel3
 	}else{
-		psending[3] = ch;		//Kanal1
-		psending[4] = 0;		//Kanal2
-		psending[5] = 0;		//Kanal3
+		psending[3] = ch;		//Channel1
+		psending[4] = 0;		//Channel2
+		psending[5] = 0;		//Channel3
 	}
 }
 
 void sendoverudp(char *pip, int pport, unsigned char psending[]){
 	int sock;
 	struct sockaddr_in echoserver;
-	//struct sockaddr_in echoclient;
-	//char buffer[BUFFSIZE];
 	unsigned int echolen;			
 	
 	/* Create the UDP socket */
@@ -87,10 +85,10 @@ void sendoverudp(char *pip, int pport, unsigned char psending[]){
 		Die("Failed to create socket");
 	}
 	/* Construct the server sockaddr_in structure */
-	memset(&echoserver, 0, sizeof(echoserver));       /* Clear struct */
-	echoserver.sin_family = AF_INET;                  /* Internet/IP */
-	echoserver.sin_addr.s_addr = inet_addr(pip);  /* IP address */
-	echoserver.sin_port = htons(pport);       /* server port */		
+	memset(&echoserver, 0, sizeof(echoserver));		/* Clear struct */
+	echoserver.sin_family = AF_INET;				/* Internet/IP */
+	echoserver.sin_addr.s_addr = inet_addr(pip);	/* IP address */
+	echoserver.sin_port = htons(pport);				/* server port */		
 	
 	echolen = 6;
 	
@@ -108,31 +106,8 @@ void sendoverudp(char *pip, int pport, unsigned char psending[]){
 
 
 int mymain(char *ip, int port, struct arg_str *values, struct arg_str *channels, struct arg_str *mixed)
-		   /*int l, int R, int k,
-           const char **defines, int ndefines,
-           const char *outfile,
-           int v,
-           const char **infiles, int ninfiles*/
-	{
-/*
-	int i;
-	
-    if (l>0) printf("list files (-l)\n");
-    if (R>0) printf("recurse through directories (-R)\n");
-    if (v>0) printf("verbose is enabled (-v)\n");
-    printf("scalar k=%d\n",k);
-    printf("output is \"%s\"\n", outfile);
-	
-    for (i=0; i<ndefines; i++)
-        printf("user defined macro \"%s\"\n",defines[i]);
-	
-    for (i=0; i<ninfiles; i++)
-        printf("infile[%d]=\"%s\"\n",i,infiles[i]);
-*/
-	
-	//my f*cking code!
-	
-	//ip? port?
+{
+	//check if ip & port are set, otherwise use defaults
 	if(ip == NULL) {
 		fprintf(stdout,"No Server specified - trying localhost...\n");
 		ip = "127.0.0.1";
@@ -146,45 +121,46 @@ int mymain(char *ip, int port, struct arg_str *values, struct arg_str *channels,
 	//init sending array
 	unsigned char sending[6];
 	sending[0] = 255; //Startbyte
-		sending[1] = 254; //Wert1
-		sending[2] = 1;   //Wert2
-		sending[3] = 0;   //Kanal1
-		sending[4] = 0;   //Kanal2
-		sending[5] = 0;   //Kanal3
+	
+	//still needed? FIXME! 
+	sending[1] = 254; //Values1
+	sending[2] = 1;   //Values2
+	sending[3] = 0;   //Channel1
+	sending[4] = 0;   //Channel2
+	sending[5] = 0;   //Channel3
 		
 	//how many packets?
 	int packets = 0;
 	
-		
 	if(values->count>0){
 		//we have teh valuez
 		
-		char *test;
+		//Split values-string
+		char *t_values;
 		char *i_values[4];
-		strcpy ( test, values->sval[0] );
-		//how many packets?
-		packets = split(test,4, i_values);
+		strcpy ( t_values, values->sval[0] );
+		packets = split(t_values,4, i_values);
 		
 		if(channels->count>0) {
 			if(channels->count>=packets) {
-				//nur die menge channels wie values
+				//use only so many channels as values
 				for(int i=0; i<packets; i++){
 					fillsending((int)values->sval[i], (int)channels->sval[i], sending);
 					sendoverudp(ip, port, sending);
 				}
 					
 			}else if(channels->count<packets){
-				//nur menge values wie channels
+				//use only so many values as channels
 				for(int i=0; i<channels->count; i++){
 					fillsending((int)values->sval[i], (int)channels->sval[i], sending);
 					sendoverudp(ip, port, sending);
 				}
 			}else{
-				//menge values = menge channels
-				Die("values=channels, This could and should never happen");
+				//number of values equals number of channels
+				Die("values=channels, This could and should never happen\n");
 			}
 		}else{
-			//standard-channels
+			//default-channels
 			for(int i=0; i<packets; i++){
 				fillsending((int)i_values[i], i, sending);
 				sendoverudp(ip, port, sending);
@@ -209,129 +185,6 @@ int mymain(char *ip, int port, struct arg_str *values, struct arg_str *channels,
 		}
 		
 	}
-		
-		
-/*	if(values->count<=0){
-		//FIXME!
-		fprintf(stdout, "lalala");  //FIXME - irgendwas stimmt hier noch nicht
-	}else{ //Values set
-		
-		
-		//values behandeln
-		packets = values->count;
-		
-		for(int i=0; i<packets; i++){
-			int temp = (int)values->sval[i];
-			if(temp>254) {
-				sending[1] = 254; //Wert
-				sending[2] = 1;   //Wert
-			}else{
-				sending[1] = temp;
-				sending[2] = 0;
-			}
-			
-			sending[3] = 0;   //Kanal
-			sending[4] = 0;   //Kanal
-			sending[5] = 0;   //Kanal
-			
-			if(channels->count == 0){
-				sending[3] = i;
-			} else {
-				temp = (int)channels->sval[i];
-				if(temp>0)
-				{
-					if(temp>254){
-						sending[3] = 254;
-					}else{
-						sending[3] = temp;
-					}
-				
-					if(temp>508) {
-						sending[4] = 254;   //Kanal
-					}else{
-						sending[4] = temp-254;
-					}
-					if(temp>512) {
-						sending[5] = 4;   //Kanal
-					}else{
-						sending[5] = temp-508; //Kanal
-					}
-				}
-			}
-						
-		}
-	}
-*/			
-		
-		
-	/*int sock;
-	struct sockaddr_in echoserver;
-	//struct sockaddr_in echoclient;
-	//char buffer[BUFFSIZE];
-	unsigned int echolen;
-	//unsigned in clientlen;
-	//int received = 0;
-	
-	//if (argc != 4) {
-	//	fprintf(stderr, "USAGE: %s <server_ip> <word> <port>\n", argv[0]);
-	//	exit(1);
-	//}
-	*/
-	/* Create the UDP socket */
-	/*if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
-		Die("Failed to create socket");
-	}*/
-	/* Construct the server sockaddr_in structure */
-	//memset(&echoserver, 0, sizeof(echoserver));       /* Clear struct */
-	//echoserver.sin_family = AF_INET;                  /* Internet/IP */
-	//echoserver.sin_addr.s_addr = inet_addr(ip);  /* IP address */
-	//echoserver.sin_port = htons(port);       /* server port */
-	
-	/* Send the word to the server */
-	/*char sending[6];
-	 sending[0] = 'a'; //Startbyte
-	 sending[1] = 'b'; //Wert
-	 sending[2] = 'c';   //Wert
-	 sending[3] = 'd';   //Kanal
-	 sending[4] = 'e';   //Kanal
-	 sending[5] = 'f';   //Kanal
-	 */
-	//unsigned char sending[6];
-	/*sending[0] = 255; //Startbyte
-	sending[1] = 254; //Wert
-	sending[2] = 1;   //Wert
-	sending[3] = 0;   //Kanal
-	sending[4] = 0;   //Kanal
-	sending[5] = 0;   //Kanal
-	
-	echolen = 6;
-
-	
-	if (sendto(sock, sending, echolen, 0,
-			   (struct sockaddr *) &echoserver,
-			   sizeof(echoserver)) != echolen) {
-		Die("Mismatch in number of sent bytes");
-	}*/
-	
-	/* Receive the word back from the server */
-	/* fprintf(stdout, "Received: ");
-	 clientlen = sizeof(echoclient);
-	 if ((received = recvfrom(sock, buffer, BUFFSIZE, 0,
-	 (struct sockaddr *) &echoclient,
-	 &clientlen)) != echolen) {
-	 Die("Mismatch in number of received bytes");
-	 }*/
-	/* Check that client and server are using same socket */
-	/* if (echoserver.sin_addr.s_addr != echoclient.sin_addr.s_addr) {
-	 Die("Received a packet from an unexpected server");
-	 }*/
-	//buffer[received] = '\0';        /* Assure null terminated string */
-	/*fprintf(stdout, buffer);
-	 fprintf(stdout, "\n");*/
-	//close(sock);
-	exit(0);
-	
-	//end of my f*ucking code!
 	
     return 0;
 }
