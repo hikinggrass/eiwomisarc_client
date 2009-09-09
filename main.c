@@ -15,9 +15,6 @@
 //logging - später evtl mal
 //#include <asl.h>
 
-
-//#define BUFFSIZE 255
-
 /* get integer random number in range a <= x <= e */
 //source: http://cplus.kompf.de/artikel/random.html
 int irand( int a, int e)
@@ -25,7 +22,6 @@ int irand( int a, int e)
     double r = e - a + 1;
     return a + (int)(r * rand()/(RAND_MAX+1.0));
 }
-
 
 void Die(char *message)
 {
@@ -53,7 +49,8 @@ int split(char str[], int size, char *rueck[])
 	return i;
 }
 
-void fillsending(int val, int ch, unsigned char psending[]){
+void fillsending(int val, int ch, unsigned char psending[])
+{
 	//random?
 	if(val<0){
 		val = irand(0, 255);
@@ -89,7 +86,8 @@ void fillsending(int val, int ch, unsigned char psending[]){
 	}
 }
 
-void sendoverudp(char *pip, int pport, unsigned char psending[]){
+void sendoverudp(char *pip, int pport, unsigned char psending[])
+{
 	int sock;
 	struct sockaddr_in echoserver;
 	unsigned int echolen;			
@@ -115,7 +113,6 @@ void sendoverudp(char *pip, int pport, unsigned char psending[]){
 
 	//close the socket
 	close(sock);
-
 }
 
 
@@ -130,7 +127,6 @@ int mymain(char *ip, int port, struct arg_str *values, struct arg_str *channels,
 		fprintf(stdout,"No Port specified - using 1337.\n");
 		port = 1337;
 	}
-
 
 	//init sending array
 	unsigned char sending[6];
