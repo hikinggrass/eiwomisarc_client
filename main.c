@@ -18,6 +18,15 @@
 
 //#define BUFFSIZE 255
 
+/* get integer random number in range a <= x <= e */
+//source: http://cplus.kompf.de/artikel/random.html
+int irand( int a, int e)
+{
+    double r = e - a + 1;
+    return a + (int)(r * rand()/(RAND_MAX+1.0));
+}
+
+
 void Die(char *message)
 {
 	perror(message);
@@ -45,8 +54,13 @@ int split(char str[], int size, char *rueck[])
 }
 
 void fillsending(int val, int ch, unsigned char psending[]){
+	//random?
+	if(val<0){
+		val = irand(0, 255);
+	}
+
 	//value
-	
+
 	if(val>254){
 		psending[1] = 254; //Values1
 		psending[2] = 1;   //Values2
@@ -54,7 +68,7 @@ void fillsending(int val, int ch, unsigned char psending[]){
 		psending[1] = val; //Values1
 		psending[2] = 0;   //Values2
 	}
-	
+
 	//channel
 	if(ch>512){
 		psending[3] = 254;		//Channel1
@@ -79,7 +93,7 @@ void sendoverudp(char *pip, int pport, unsigned char psending[]){
 	int sock;
 	struct sockaddr_in echoserver;
 	unsigned int echolen;			
-	
+
 	/* Create the UDP socket */
 	if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
 		Die("Failed to create socket");
@@ -89,19 +103,19 @@ void sendoverudp(char *pip, int pport, unsigned char psending[]){
 	echoserver.sin_family = AF_INET;				/* Internet/IP */
 	echoserver.sin_addr.s_addr = inet_addr(pip);	/* IP address */
 	echoserver.sin_port = htons(pport);				/* server port */		
-	
+
 	echolen = 6;
-	
+
 	//Send the data
 	if (sendto(sock, psending, echolen, 0,
 			   (struct sockaddr *) &echoserver,
 			   sizeof(echoserver)) != echolen) {
 		Die("Mismatch in number of sent bytes");
 	}
-	
+
 	//close the socket
 	close(sock);
-	
+
 }
 
 
@@ -116,31 +130,31 @@ int mymain(char *ip, int port, struct arg_str *values, struct arg_str *channels,
 		fprintf(stdout,"No Port specified - using 1337.\n");
 		port = 1337;
 	}
-		
-		
+
+
 	//init sending array
 	unsigned char sending[6];
 	sending[0] = 255; //Startbyte
-	
+
 	//still needed? FIXME! 
 	sending[1] = 254; //Values1
 	sending[2] = 1;   //Values2
 	sending[3] = 0;   //Channel1
 	sending[4] = 0;   //Channel2
 	sending[5] = 0;   //Channel3
-		
+
 	//how many packets?
 	int packets = 0;
-	
+
 	if(values->count>0){
 		//we have teh valuez
-		
+
 		//Split values-string
 		char *t_values;
 		char *i_values[4];
 		strcpy ( t_values, values->sval[0] );
 		packets = split(t_values,4, i_values);
-		
+
 		if(channels->count>0) {
 			if(channels->count>=packets) {
 				//use only so many channels as values
@@ -148,7 +162,7 @@ int mymain(char *ip, int port, struct arg_str *values, struct arg_str *channels,
 					fillsending((int)values->sval[i], (int)channels->sval[i], sending);
 					sendoverudp(ip, port, sending);
 				}
-					
+
 			}else if(channels->count<packets){
 				//use only so many values as channels
 				for(int i=0; i<channels->count; i++){
@@ -183,35 +197,36 @@ int mymain(char *ip, int port, struct arg_str *values, struct arg_str *channels,
 			fillsending((int)i_mixed[i+1],(int)i_mixed[i], sending);
 			sendoverudp(ip, port, sending);
 		}
-		
 	}
-	
     return 0;
 }
 
 
 int main(int argc, char **argv)
 {	
+	//init random number generator
+	srand(time(0));
+
 	//server (ip adress, FIXME: check with regex)
 	struct arg_str *serverip = arg_str0("sS","server,ip","","specify the ip address of the server, default: localhost");
-	
-	struct arg_int *serverport = arg_int0("pP","port","","specify the port of the server, default: 1337");
+
+	struct arg_int *serverport = arg_int0("pP","port","","specify the serverport, default: 1337");
 	struct arg_str *values = arg_strn("vV","values","",0,1,"specify up to 4 values separated by ',' - range 0-255, default: 0, negative values: random");
 	struct arg_str *channels = arg_strn("cC","channels","",0,1,"specify up to 4 channels separated by ',' - range 0-512, default 0-3");
 	struct arg_str *mixed = arg_strn("mM","mixed","",0,1,"set values for corresponding channels. Format: <channel0>,<value0>,<channel1>,[...]");
 
-	
+
     struct arg_lit  *help    = arg_lit0("hH","help",                    "print this help and exit");
     struct arg_lit  *version = arg_lit0(NULL,"version",                 "print version information and exit");
-	
+
     struct arg_end  *end     = arg_end(20);
-	
+
     void* argtable[] = {serverip,serverport,values,channels,mixed,help,version,end};    
-	
+
 	const char* progname = "udp_client_cmd"; //fixme!
     int nerrors;
     int exitcode=0;
-	
+
     /* verify the argtable[] entries were allocated sucessfully */
     if (arg_nullcheck(argtable) != 0)
 	{
@@ -223,10 +238,10 @@ int main(int argc, char **argv)
 	
     /* set any command line default values prior to parsing */
 	//nothing
-	
+
     /* Parse the command line as defined by argtable[] */
     nerrors = arg_parse(argc,argv,argtable);
-	
+
     /* special case: '--help' takes precedence over error reporting */
     if (help->count > 0)
 	{
@@ -238,7 +253,7 @@ int main(int argc, char **argv)
         exitcode=0;
         goto exit;
 	}
-	
+
     /* special case: '--version' takes precedence error reporting */
     if (version->count > 0)
 	{
@@ -249,7 +264,7 @@ int main(int argc, char **argv)
         exitcode=0;
         goto exit;
 	}
-	
+
     /* If the parser returned any errors then display them and exit */
     if (nerrors > 0)
 	{
@@ -259,7 +274,7 @@ int main(int argc, char **argv)
         exitcode=1;
         goto exit;
 	}
-	
+
     /* special case: uname with no command line options induces brief help */
     if (argc==1)
 	{
@@ -267,14 +282,14 @@ int main(int argc, char **argv)
         exitcode=0;
         goto exit;
 	}
-	
+
 	/* special case: more values than channels & channels > 0 */
 	if( (channels->count != values->count) && (channels->count > 0) )
 	{
 		printf("Number of specified channels does not match the number of specified values!\n",progname);
         exitcode=1;
 	}
-	
+
 	/* special case: values or channels + mixed mode */
 	if( (mixed->count > 0) && ( (channels->count > 0) || (values->count > 0) ) )
 	{
@@ -282,25 +297,25 @@ int main(int argc, char **argv)
         exitcode=1;
 		goto exit;
 	}
-	
+
     /* normal case: take the command line options at face value */
-	
+
 	//check if server ip is set
 	char *c_serverip = NULL;
 	if(serverip->count>0)
 		c_serverip = (char *)serverip->sval[0];
-	
+
 	//check if server port is set
 	int i_serverport = -1;
 	if(serverport->count>0)
 		i_serverport = (int)serverport->ival[0];
-	
+
 	exitcode = mymain(c_serverip, i_serverport, values, channels, mixed);
-	
+
 exit:
     /* deallocate each non-null entry in argtable[] */
     arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
-	
+
     return exitcode;
 }
 
