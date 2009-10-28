@@ -156,30 +156,36 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 
 	//how many packets?
 	int packets = 0;
+	int channels_count = 0;
 
 	if(values->count>0){
 		//we have teh valuez
 
-		//split the command-line optins
+		//split the -v command-line option
 		char t_values[strlen(*values->sval)];
-		//char *t_values;
 		int i_values[8];
 		strcpy ( t_values, values->sval[0] );
-		//how many packets?
+		//how many values (packets)?
 		packets = split(t_values,8, i_values);
 
 		if(channels->count>0) {
+			//split the -c command-line option
+			char t_channels[strlen(*channels->sval)];
+			int i_channels[8];
+			strcpy ( t_channels, channels->sval[0] );
+			//how many packets?
+			channels_count = split(t_channels,8, i_channels);
+
 			if(channels->count>=packets) {
 				//use only so many channels as values
 				for(int i=0; i<packets; i++){
-					fillsending((int)values->sval[i], (int)channels->sval[i], sending); //fixme! denkfehler
+					fillsending(i_values[i], i_channels[i], sending);
 					sendoverudp(ip, port, sending);
 				}
-
 			}else if(channels->count<packets){
 				//use only so many values as channels
 				for(int i=0; i<channels->count; i++){
-					fillsending((int)values->sval[i], (int)channels->sval[i], sending); //fixme! denkfehler
+					fillsending(i_values[i], i_channels[i], sending);
 					sendoverudp(ip, port, sending);
 				}
 			}else{
