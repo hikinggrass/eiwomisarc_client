@@ -23,17 +23,26 @@ int irand( int a, int e)
     return a + (int)(r * rand()/(RAND_MAX+1.0));
 }
 
+unsigned char itouc(int pInt){
+	//int Wert = atoi(i_values[0]);
+	//int Wert = i_values[0];
+	//int Wert;
+	unsigned char Byte;
+
+	//Byte1 = ( unsigned char ) ( Wert >> 8 );
+	return Byte = ( unsigned char ) ( pInt );
+}
+
 void Die(char *message)
 {
 	perror(message);
 	exit(1);
 }
 
-int split(char str[], int size, char *rueck[])
+int split(char *str, int size, int *rueck)
 {	
 	char *p;
-
-	printf ("Split \"%s\" in tokens:\n", str); //debug
+	printf("Split \"%s\" in tokens:\n", str); //debug
 	
 	p = strtok (str,",");
 	
@@ -41,7 +50,7 @@ int split(char str[], int size, char *rueck[])
 	
 	while ( (p != NULL) && (i < size) )
 	{
-		rueck[i] = p;
+		rueck[i] = atoi(p);
 		printf ("%s\n", p); //debug
 		p = strtok (NULL, " ,");
 		i++;
@@ -49,7 +58,7 @@ int split(char str[], int size, char *rueck[])
 	return i;
 }
 
-void fillsending(int val, int ch, unsigned char psending[])
+void fillsending(int val, int ch, int *psending)
 {
 	//random?
 	if(val<0){
@@ -57,7 +66,6 @@ void fillsending(int val, int ch, unsigned char psending[])
 	}
 
 	//value
-
 	if(val>254){
 		psending[1] = 254; //Values1
 		psending[2] = 1;   //Values2
@@ -86,11 +94,18 @@ void fillsending(int val, int ch, unsigned char psending[])
 	}
 }
 
-void sendoverudp(char *pip, int pport, unsigned char psending[])
+void sendoverudp(char *pip, int pport, int *psending)
 {
 	int sock;
 	struct sockaddr_in echoserver;
-	unsigned int echolen;			
+	unsigned int echolen;
+
+	unsigned char transmit[6];
+
+	//convert psending int -> unsigned char for transmission
+	for(int i=0; i<6; i++){
+		transmit[i] = itouc(psending[i]);
+	}
 
 	/* Create the UDP socket */
 	if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
@@ -105,7 +120,7 @@ void sendoverudp(char *pip, int pport, unsigned char psending[])
 	echolen = 6;
 
 	//Send the data
-	if (sendto(sock, psending, echolen, 0,
+	if (sendto(sock, transmit, echolen, 0,
 			   (struct sockaddr *) &echoserver,
 			   sizeof(echoserver)) != echolen) {
 		Die("Mismatch in number of sent bytes");
@@ -116,20 +131,20 @@ void sendoverudp(char *pip, int pport, unsigned char psending[])
 }
 
 
-int mymain(char *ip, int port, struct arg_str *values, struct arg_str *channels, struct arg_str *mixed)
+int mymain(const char* progname, char *ip, int port, struct arg_str *values, struct arg_str *channels, struct arg_str *mixed)
 {
 	//check if ip & port are set, otherwise use defaults
 	if(ip == NULL) {
-		fprintf(stdout,"No Server specified - trying localhost...\n");
+		printf("No Server specified - trying localhost...\n",progname);
 		ip = "127.0.0.1";
 	}
 	if(port == -1) {
-		fprintf(stdout,"No Port specified - using 1337.\n");
+		printf("No Port specified - using 1337.\n",progname);
 		port = 1337;
 	}
 
 	//init sending array
-	unsigned char sending[6];
+	int sending[6];
 	sending[0] = 255; //Startbyte
 
 	//still needed? FIXME! 
@@ -145,11 +160,13 @@ int mymain(char *ip, int port, struct arg_str *values, struct arg_str *channels,
 	if(values->count>0){
 		//we have teh valuez
 
-		//Split values-string
-		char *t_values;
-		char *i_values[4];
+		//split the command-line optins
+		char t_values[strlen(*values->sval)];
+		//char *t_values;
+		int i_values[8];
 		strcpy ( t_values, values->sval[0] );
-		packets = split(t_values,4, i_values);
+		//how many packets?
+		packets = split(t_values,8, i_values);
 
 		if(channels->count>0) {
 			if(channels->count>=packets) {
@@ -172,25 +189,26 @@ int mymain(char *ip, int port, struct arg_str *values, struct arg_str *channels,
 		}else{
 			//default-channels
 			for(int i=0; i<packets; i++){
-				fillsending((int)i_values[i], i, sending);
+				fillsending(atoi(values->sval[i]), i, sending);
 				sendoverudp(ip, port, sending);
 			}
 		}
 	}else if(mixed->count>0){
 		//mixed-mode "hell yeah"
-		
+
 		//split the command-line optins
-		char *t_mixed;
-		char *i_mixed[8];
-		strcpy ( t_mixed, mixed->sval[0] );
+		char t_values[strlen(*values->sval)];
+		//char *t_values;
+		int i_values[8];
+		strcpy ( t_values, values->sval[0] );
 		//how many packets?
-		packets = split(t_mixed,8, i_mixed);
+		packets = split(t_values,8, i_values);
 		
 		if( (packets%2) > 0)
 			packets -= 1;
 		
 		for(int i=0; i<packets; i=i+2){
-			fillsending((int)i_mixed[i+1],(int)i_mixed[i], sending);
+			fillsending(atoi(values->sval[i]), i, sending);
 			sendoverudp(ip, port, sending);
 		}
 	}
@@ -306,7 +324,7 @@ int main(int argc, char **argv)
 	if(serverport->count>0)
 		i_serverport = (int)serverport->ival[0];
 
-	exitcode = mymain(c_serverip, i_serverport, values, channels, mixed);
+	exitcode = mymain(progname, c_serverip, i_serverport, values, channels, mixed);
 
 exit:
     /* deallocate each non-null entry in argtable[] */
