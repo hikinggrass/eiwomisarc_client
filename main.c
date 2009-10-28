@@ -172,14 +172,14 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 			if(channels->count>=packets) {
 				//use only so many channels as values
 				for(int i=0; i<packets; i++){
-					fillsending((int)values->sval[i], (int)channels->sval[i], sending);
+					fillsending((int)values->sval[i], (int)channels->sval[i], sending); //fixme! denkfehler
 					sendoverudp(ip, port, sending);
 				}
 
 			}else if(channels->count<packets){
 				//use only so many values as channels
 				for(int i=0; i<channels->count; i++){
-					fillsending((int)values->sval[i], (int)channels->sval[i], sending);
+					fillsending((int)values->sval[i], (int)channels->sval[i], sending); //fixme! denkfehler
 					sendoverudp(ip, port, sending);
 				}
 			}else{
@@ -189,7 +189,7 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 		}else{
 			//default-channels
 			for(int i=0; i<packets; i++){
-				fillsending(atoi(values->sval[i]), i, sending);
+				fillsending(i_values[i], i, sending);
 				sendoverudp(ip, port, sending);
 			}
 		}
@@ -208,7 +208,7 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 			packets -= 1;
 		
 		for(int i=0; i<packets; i=i+2){
-			fillsending(atoi(values->sval[i]), i, sending);
+			fillsending(i_values[i], i, sending);
 			sendoverudp(ip, port, sending);
 		}
 	}
