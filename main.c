@@ -159,16 +159,20 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 
 		/* split the -v command-line option */
 		char t_values[strlen(*values->sval)];
+		strncpy( t_values, values->sval[0], strlen(*values->sval));
+
 		int i_values[8];
-		strcpy ( t_values, values->sval[0] );
+
 		/* how many values (packets)? */
 		packets = split(t_values,8, i_values);
 
 		if(channels->count>0) {
 			/* split the -c command-line option */
 			char t_channels[strlen(*channels->sval)];
+			strncpy(t_channels, channels->sval[0], strlen(*channels->sval));
+
 			int i_channels[8];
-			strcpy ( t_channels, channels->sval[0] );
+
 			/* how many packets? */
 			channels_count = split(t_channels,8, i_channels);
 
@@ -200,9 +204,10 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 
 		/* split the command-line optins */
 		char t_values[strlen(*values->sval)];
-		/* char *t_values; */
+		strncpy(t_values, values->sval[0], strlen(*values->sval));
+
 		int i_values[8];
-		strcpy ( t_values, values->sval[0] );
+
 		/* how many packets? */
 		packets = split(t_values,8, i_values);
 		
