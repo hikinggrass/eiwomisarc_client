@@ -23,7 +23,8 @@ int irand( int a, int e)
     return a + (int)(r * rand()/(RAND_MAX+1.0));
 }
 
-unsigned char itouc(int pInt){
+unsigned char itouc(int pInt)
+{
 	unsigned char byte;
 	return byte = ( unsigned char ) ( pInt );
 }
@@ -56,33 +57,33 @@ int split(char *str, int size, int *rueck)
 void fillsending(int val, int ch, int *psending)
 {
 	//negative value = random value!
-	if(val<0){
+	if(val<0) {
 		val = irand(0, 255);
 	}
 
 	//value
-	if(val>254){
+	if(val>254) {
 		psending[1] = 254; //Values1
 		psending[2] = 1;   //Values2
-	}else{
+	}else {
 		psending[1] = val; //Values1
 		psending[2] = 0;   //Values2
 	}
 
 	//channel
-	if(ch>512){
+	if(ch>512) {
 		psending[3] = 254;		//Channel1
 		psending[4] = 254;		//Channel2
 		psending[5] = 4;		//Channel3
-	}else if(ch>508){
+	}else if(ch>508) {
 		psending[3] = 254;		//Channel1
 		psending[4] = 254;		//Channel2
 		psending[5] = ch-508;	//Channel3
-	}else if(ch>254){
+	}else if(ch>254) {
 		psending[3] = 254;		//Channel1
 		psending[4] = ch-254;	//Channel2
 		psending[5] = 0;		//Channel3
-	}else{
+	}else {
 		psending[3] = ch;		//Channel1
 		psending[4] = 0;		//Channel2
 		psending[5] = 0;		//Channel3
@@ -98,7 +99,7 @@ void sendoverudp(char *pip, int pport, int *psending)
 	unsigned char transmit[6];
 
 	//convert psending int -> unsigned char for transmission
-	for(int i=0; i<6; i++){
+	for(int i=0; i<6; i++) {
 		transmit[i] = itouc(psending[i]);
 	}
 
@@ -153,7 +154,7 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 	int packets = 0;
 	int channels_count = 0;
 
-	if(values->count>0){
+	if(values->count>0) {
 		//we have teh valuez
 
 		//split the -v command-line option
@@ -173,28 +174,28 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 
 			if(channels->count>=packets) {
 				//use only as many values as channels
-				for(int i=0; i<packets; i++){
+				for(int i=0; i<packets; i++) {
 					fillsending(i_values[i], i_channels[i], sending);
 					sendoverudp(ip, port, sending);
 				}
-			}else if(channels->count<packets){
+			}else if(channels->count<packets) {
 				//use only as many values as channels
-				for(int i=0; i<channels->count; i++){
+				for(int i=0; i<channels->count; i++) {
 					fillsending(i_values[i], i_channels[i], sending);
 					sendoverudp(ip, port, sending);
 				}
-			}else{
+			}else {
 				//number of values equals number of channels
 				Die("values=channels, This could and should never happen\n");
 			}
-		}else{
+		}else {
 			//default-channels
-			for(int i=0; i<packets; i++){
+			for(int i=0; i<packets; i++) {
 				fillsending(i_values[i], i, sending);
 				sendoverudp(ip, port, sending);
 			}
 		}
-	}else if(mixed->count>0){ //fixme!
+	}else if(mixed->count>0) { //fixme!
 		//mixed-mode "hell yeah"
 
 		//split the command-line optins
@@ -208,7 +209,7 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 		if( (packets%2) > 0)
 			packets -= 1;
 		
-		for(int i=0; i<packets; i=i+2){
+		for(int i=0; i<packets; i=i+2) {
 			fillsending(i_values[i], i, sending);
 			sendoverudp(ip, port, sending);
 		}
@@ -243,8 +244,7 @@ int main(int argc, char **argv)
     int exitcode=0;
 
     /* verify the argtable[] entries were allocated sucessfully */
-    if (arg_nullcheck(argtable) != 0)
-	{
+    if (arg_nullcheck(argtable) != 0) {
         /* NULL entries were detected, some allocations must have failed */
         printf("%s: insufficient memory\n",progname);
         exitcode=1;
@@ -258,8 +258,7 @@ int main(int argc, char **argv)
     nerrors = arg_parse(argc,argv,argtable);
 
     /* special case: '--help' takes precedence over error reporting */
-    if (help->count > 0)
-	{
+    if (help->count > 0) {
         printf("Usage: %s", progname);
         arg_print_syntax(stdout,argtable,"\n");
         printf("A client that sends udp-packets to a udp-server which controls\n");
@@ -270,8 +269,7 @@ int main(int argc, char **argv)
 	}
 
     /* special case: '--version' takes precedence error reporting */
-    if (version->count > 0)
-	{
+    if (version->count > 0) {
         printf("'%s' version 0.1\n",progname);
         printf("A client that sends udp-packets to a udp-server which controls\n");
 		printf("the EIWOMISA controller over RS-232\n");
@@ -281,8 +279,7 @@ int main(int argc, char **argv)
 	}
 
     /* If the parser returned any errors then display them and exit */
-    if (nerrors > 0)
-	{
+    if (nerrors > 0) {
         /* Display the error details contained in the arg_end struct.*/
         arg_print_errors(stdout,end,progname);
         printf("Try '%s --help' for more information.\n",progname);
@@ -291,23 +288,20 @@ int main(int argc, char **argv)
 	}
 
     /* special case: uname with no command line options induces brief help */
-    if (argc==1)
-	{
+    if (argc==1) {
         printf("Try '%s --help' for more information.\n",progname);
         exitcode=0;
         goto exit;
 	}
 
 	/* special case: more values than channels & channels > 0 */
-	if( (channels->count != values->count) && (channels->count > 0) )
-	{
+	if( (channels->count != values->count) && (channels->count > 0) ) {
 		printf("Number of specified channels does not match the number of specified values!\n",progname);
         exitcode=1;
 	}
 
 	/* special case: values or channels + mixed mode */
-	if( (mixed->count > 0) && ( (channels->count > 0) || (values->count > 0) ) )
-	{
+	if( (mixed->count > 0) && ( (channels->count > 0) || (values->count > 0) ) ) {
 		printf("Please do not mix --values or --channels with --mixed!\n",progname);
         exitcode=1;
 		goto exit;
