@@ -6,17 +6,17 @@
 #include <unistd.h>
 #include <netinet/in.h>
 
-//argtable
+/* argtable */
 #include "argtable2/argtable2.h"
 
-//regular expressions
+/* regular expressions */
 #include <regex.h>
 
-//logging - später evtl mal
-//#include <asl.h>
+/* logging - später evtl mal 
+#include <asl.h> */
 
-/* get integer random number in range a <= x <= e */
-//source: http://cplus.kompf.de/artikel/random.html
+/* get integer random number in range a <= x <= e 
+   source: http://cplus.kompf.de/artikel/random.html*/
 int irand( int a, int e)
 {
     double r = e - a + 1;
@@ -38,7 +38,7 @@ void Die(char *message)
 int split(char *str, int size, int *rueck)
 {	
 	char *p;
-	printf("Split \"%s\" in tokens:\n", str); //debug
+	printf("Split \"%s\" in tokens:\n", str); /* debug */
 	
 	p = strtok (str,",");
 	
@@ -47,7 +47,7 @@ int split(char *str, int size, int *rueck)
 	while ( (p != NULL) && (i < size) )
 	{
 		rueck[i] = atoi(p);
-		printf ("%s\n", p); //debug
+		printf ("%s\n", p); /* debug */
 		p = strtok (NULL, " ,");
 		i++;
 	}
@@ -56,37 +56,37 @@ int split(char *str, int size, int *rueck)
 
 void fillsending(int val, int ch, int *psending)
 {
-	//negative value = random value!
+	/* negative value = random value! */
 	if(val<0) {
 		val = irand(0, 255);
 	}
 
-	//value
+	/* value */
 	if(val>254) {
-		psending[1] = 254; //Values1
-		psending[2] = 1;   //Values2
+		psending[1] = 254; /* Values1 */
+		psending[2] = 1;   /* Values2 */
 	}else {
-		psending[1] = val; //Values1
-		psending[2] = 0;   //Values2
+		psending[1] = val; /* Values1 */
+		psending[2] = 0;   /* Values2 */
 	}
 
-	//channel
+	/* channel */
 	if(ch>512) {
-		psending[3] = 254;		//Channel1
-		psending[4] = 254;		//Channel2
-		psending[5] = 4;		//Channel3
+		psending[3] = 254;		/* Channel1 */
+		psending[4] = 254;		/* Channel2 */
+		psending[5] = 4;		/* Channel3 */
 	}else if(ch>508) {
-		psending[3] = 254;		//Channel1
-		psending[4] = 254;		//Channel2
-		psending[5] = ch-508;	//Channel3
+		psending[3] = 254;		/* Channel1 */
+		psending[4] = 254;		/* Channel2 */
+		psending[5] = ch-508;	/* Channel3 */
 	}else if(ch>254) {
-		psending[3] = 254;		//Channel1
-		psending[4] = ch-254;	//Channel2
-		psending[5] = 0;		//Channel3
+		psending[3] = 254;		/* Channel1 */
+		psending[4] = ch-254;	/* Channel2 */
+		psending[5] = 0;		/* Channel3 */
 	}else {
-		psending[3] = ch;		//Channel1
-		psending[4] = 0;		//Channel2
-		psending[5] = 0;		//Channel3
+		psending[3] = ch;		/* Channel1 */
+		psending[4] = 0;		/* Channel2 */
+		psending[5] = 0;		/* Channel3 */
 	}
 }
 
@@ -98,7 +98,7 @@ void sendoverudp(char *pip, int pport, int *psending)
 
 	unsigned char transmit[6];
 
-	//convert psending int -> unsigned char for transmission
+	/* convert psending int -> unsigned char for transmission */
 	for(int i=0; i<6; i++) {
 		transmit[i] = itouc(psending[i]);
 	}
@@ -116,21 +116,21 @@ void sendoverudp(char *pip, int pport, int *psending)
 
 	echolen = 6;
 
-	//Send the data
+	/* Send the data */
 	if (sendto(sock, transmit, echolen, 0,
 			   (struct sockaddr *) &echoserver,
 			   sizeof(echoserver)) != echolen) {
 		Die("Mismatch in number of sent bytes");
 	}
 
-	//close the socket
+	/* close the socket */
 	close(sock);
 }
 
 
 int mymain(const char* progname, char *ip, int port, struct arg_str *values, struct arg_str *channels, struct arg_str *mixed)
 {
-	//check if ip & port are set, otherwise use defaults
+	/* check if ip & port are set, otherwise use defaults */
 	if(ip == NULL) {
 		printf("No Server specified - trying localhost...\n",progname);
 		ip = "127.0.0.1";
@@ -140,70 +140,70 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 		port = 1337;
 	}
 
-	//init sending array
+	/* init sending array */
 	int sending[6];
-	sending[0] = 255; //Startbyte
+	sending[0] = 255; /* Startbyte */
 
-	//still needed? FIXME! 
+	/* still needed? FIXME! 
 	//sending[1] = 254; //Values1
 	//sending[2] = 1;   //Values2
 	//sending[3] = 0;   //Channel1
 	//sending[4] = 0;   //Channel2
-	//sending[5] = 0;   //Channel3
+	//sending[5] = 0;   //Channel3 */
 
 	int packets = 0;
 	int channels_count = 0;
 
 	if(values->count>0) {
-		//we have teh valuez
+		/* we have teh valuez */
 
-		//split the -v command-line option
+		/* split the -v command-line option */
 		char t_values[strlen(*values->sval)];
 		int i_values[8];
 		strcpy ( t_values, values->sval[0] );
-		//how many values (packets)?
+		/* how many values (packets)? */
 		packets = split(t_values,8, i_values);
 
 		if(channels->count>0) {
-			//split the -c command-line option
+			/* split the -c command-line option */
 			char t_channels[strlen(*channels->sval)];
 			int i_channels[8];
 			strcpy ( t_channels, channels->sval[0] );
-			//how many packets?
+			/* how many packets? */
 			channels_count = split(t_channels,8, i_channels);
 
 			if(channels->count>=packets) {
-				//use only as many values as channels
+				/* use only as many values as channels */
 				for(int i=0; i<packets; i++) {
 					fillsending(i_values[i], i_channels[i], sending);
 					sendoverudp(ip, port, sending);
 				}
 			}else if(channels->count<packets) {
-				//use only as many values as channels
+				/* use only as many values as channels */
 				for(int i=0; i<channels->count; i++) {
 					fillsending(i_values[i], i_channels[i], sending);
 					sendoverudp(ip, port, sending);
 				}
 			}else {
-				//number of values equals number of channels
+				/* number of values equals number of channels */
 				Die("values=channels, This could and should never happen\n");
 			}
 		}else {
-			//default-channels
+			/* default-channels */
 			for(int i=0; i<packets; i++) {
 				fillsending(i_values[i], i, sending);
 				sendoverudp(ip, port, sending);
 			}
 		}
-	}else if(mixed->count>0) { //fixme!
-		//mixed-mode "hell yeah"
+	}else if(mixed->count>0) { /* fixme! */
+		/* mixed-mode "hell yeah" */
 
-		//split the command-line optins
+		/* split the command-line optins */
 		char t_values[strlen(*values->sval)];
-		//char *t_values;
+		/* char *t_values; */
 		int i_values[8];
 		strcpy ( t_values, values->sval[0] );
-		//how many packets?
+		/* how many packets? */
 		packets = split(t_values,8, i_values);
 		
 		if( (packets%2) > 0)
@@ -220,10 +220,10 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 
 int main(int argc, char **argv)
 {	
-	//init random number generator
+	/* init random number generator */
 	srand(time(0));
 
-	//server (ip adress, FIXME: check with regex)
+	/* server (ip adress, FIXME: check with regex) */
 	struct arg_str *serverip = arg_str0("sS","server,ip","","specify the ip address of the server, default: localhost");
 
 	struct arg_int *serverport = arg_int0("pP","port","","specify the serverport, default: 1337");
@@ -239,7 +239,7 @@ int main(int argc, char **argv)
 
     void* argtable[] = {serverip,serverport,values,channels,mixed,help,version,end};    
 
-	const char* progname = "udp_client_cmd"; //fixme!
+	const char* progname = "udp_client_cmd"; /* fixme! */
     int nerrors;
     int exitcode=0;
 
@@ -252,7 +252,7 @@ int main(int argc, char **argv)
 	}
 	
     /* set any command line default values prior to parsing */
-	//nothing
+	/* nothing */
 
     /* Parse the command line as defined by argtable[] */
     nerrors = arg_parse(argc,argv,argtable);
@@ -309,12 +309,12 @@ int main(int argc, char **argv)
 
     /* normal case: take the command line options at face value */
 
-	//check if server ip is set
+	/* check if server ip is set */
 	char *c_serverip = NULL;
 	if(serverip->count>0)
 		c_serverip = (char *)serverip->sval[0];
 
-	//check if server port is set
+	/* check if server port is set */
 	int i_serverport = -1;
 	if(serverport->count>0)
 		i_serverport = (int)serverport->ival[0];
