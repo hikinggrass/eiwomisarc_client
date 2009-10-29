@@ -24,13 +24,8 @@ int irand( int a, int e)
 }
 
 unsigned char itouc(int pInt){
-	//int Wert = atoi(i_values[0]);
-	//int Wert = i_values[0];
-	//int Wert;
-	unsigned char Byte;
-
-	//Byte1 = ( unsigned char ) ( Wert >> 8 );
-	return Byte = ( unsigned char ) ( pInt );
+	unsigned char byte;
+	return byte = ( unsigned char ) ( pInt );
 }
 
 void Die(char *message)
@@ -60,7 +55,7 @@ int split(char *str, int size, int *rueck)
 
 void fillsending(int val, int ch, int *psending)
 {
-	//random?
+	//negative value = random value!
 	if(val<0){
 		val = irand(0, 255);
 	}
@@ -111,6 +106,7 @@ void sendoverudp(char *pip, int pport, int *psending)
 	if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
 		Die("Failed to create socket");
 	}
+
 	/* Construct the server sockaddr_in structure */
 	memset(&echoserver, 0, sizeof(echoserver));		/* Clear struct */
 	echoserver.sin_family = AF_INET;				/* Internet/IP */
@@ -148,13 +144,12 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 	sending[0] = 255; //Startbyte
 
 	//still needed? FIXME! 
-	sending[1] = 254; //Values1
-	sending[2] = 1;   //Values2
-	sending[3] = 0;   //Channel1
-	sending[4] = 0;   //Channel2
-	sending[5] = 0;   //Channel3
+	//sending[1] = 254; //Values1
+	//sending[2] = 1;   //Values2
+	//sending[3] = 0;   //Channel1
+	//sending[4] = 0;   //Channel2
+	//sending[5] = 0;   //Channel3
 
-	//how many packets?
 	int packets = 0;
 	int channels_count = 0;
 
@@ -177,13 +172,13 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 			channels_count = split(t_channels,8, i_channels);
 
 			if(channels->count>=packets) {
-				//use only so many channels as values
+				//use only as many values as channels
 				for(int i=0; i<packets; i++){
 					fillsending(i_values[i], i_channels[i], sending);
 					sendoverudp(ip, port, sending);
 				}
 			}else if(channels->count<packets){
-				//use only so many values as channels
+				//use only as many values as channels
 				for(int i=0; i<channels->count; i++){
 					fillsending(i_values[i], i_channels[i], sending);
 					sendoverudp(ip, port, sending);
@@ -199,7 +194,7 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 				sendoverudp(ip, port, sending);
 			}
 		}
-	}else if(mixed->count>0){
+	}else if(mixed->count>0){ //fixme!
 		//mixed-mode "hell yeah"
 
 		//split the command-line optins
@@ -338,5 +333,3 @@ exit:
 
     return exitcode;
 }
-
-      
