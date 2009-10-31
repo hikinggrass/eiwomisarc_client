@@ -29,7 +29,7 @@ unsigned char itouc(int pInt)
 	return byte = ( unsigned char ) ( pInt );
 }
 
-void Die(char *message)
+void die(char *message)
 {
 	perror(message);
 	exit(1);
@@ -40,11 +40,11 @@ int split(char *str, int size, int *rueck)
 	char *p;
 	printf("Split \"%s\" in tokens:\n", str); /* debug */
 	
-	p = strtok (str,",");
+	p = strtok(str,",");
 	
 	int i=0;
 	
-	while ( (p != NULL) && (i < size) )
+	while( (p != NULL) && (i < size) )
 	{
 		rueck[i] = atoi(p);
 		printf ("%s\n", p); /* debug */
@@ -105,7 +105,7 @@ void sendoverudp(char *pip, int pport, int *psending)
 
 	/* Create the UDP socket */
 	if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
-		Die("Failed to create socket");
+		die("Failed to create socket");
 	}
 
 	/* Construct the server sockaddr_in structure */
@@ -120,7 +120,7 @@ void sendoverudp(char *pip, int pport, int *psending)
 	if (sendto(sock, transmit, echolen, 0,
 			   (struct sockaddr *) &echoserver,
 			   sizeof(echoserver)) != echolen) {
-		Die("Mismatch in number of sent bytes");
+		die("Mismatch in number of sent bytes");
 	}
 
 	/* close the socket */
@@ -190,7 +190,7 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 				}
 			}else {
 				/* number of values equals number of channels */
-				Die("values=channels, This could and should never happen\n");
+				die("values=channels, This could and should never happen\n");
 			}
 		}else {
 			/* default-channels */
