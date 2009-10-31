@@ -9,12 +9,6 @@
 /* argtable */
 #include "argtable2/argtable2.h"
 
-/* regular expressions */
-#include <regex.h>
-
-/* logging - später evtl mal 
-#include <asl.h> */
-
 /* get integer random number in range a <= x <= e 
    source: http://cplus.kompf.de/artikel/random.html*/
 int irand( int a, int e)
