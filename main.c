@@ -1,3 +1,33 @@
+/*****************************************************************************
+ * eiwomisarc_client:	A UDP-client that sends messages
+ *						to the eiwomisarc_server
+ *****************************************************************************
+ * Copyright (C) 2009 Kai Hermann
+ *
+ * Authors: Kai Hermann <kai.uwe.hermann at gmail dot com>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ *****************************************************************************/
+
+#include "git_rev.h"
+
+#define VERSION "0.1"
+#define PROGNAME "eiwomisarc_server"
+#define COPYRIGHT "September-October 2009, Kai Hermann"
+#define DEBUG 1
+
 #include <stdio.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -223,11 +253,11 @@ int main(int argc, char **argv)
 	srand(time(0));
 
 	/* server (ip adress, FIXME: check with regex) */
-	struct arg_str *serverip = arg_str0("sS","server,ip","","specify the ip address of the server, default: localhost");
+	struct arg_str *serverip = arg_str0("sS","server,ip","","ip address of the server, default: localhost");
 
-	struct arg_int *serverport = arg_int0("pP","port","","specify the serverport, default: 1337");
-	struct arg_str *values = arg_strn("vV","values","",0,1,"specify up to 4 values separated by ',' - range 0-255, default: 0, negative values: random");
-	struct arg_str *channels = arg_strn("cC","channels","",0,1,"specify up to 4 channels separated by ',' - range 0-512, default 0-3");
+	struct arg_int *serverport = arg_int0("pP","port","","serverport, default: 1337");
+	struct arg_str *values = arg_strn("vV","values","",0,1,"up to 4 values separated by ',' - range 0-255, default: 0, negative values: random");
+	struct arg_str *channels = arg_strn("cC","channels","",0,1,"up to 4 channels separated by ',' - range 0-512, default 0-3");
 	struct arg_str *mixed = arg_strn("mM","mixed","",0,1,"set values for corresponding channels. Format: <channel0>,<value0>,<channel1>,[...]");
 
 
@@ -238,14 +268,13 @@ int main(int argc, char **argv)
 
     void* argtable[] = {serverip,serverport,values,channels,mixed,help,version,end};    
 
-	const char* progname = "udp_client_cmd"; /* fixme! */
     int nerrors;
     int exitcode=0;
 
     /* verify the argtable[] entries were allocated sucessfully */
     if (arg_nullcheck(argtable) != 0) {
         /* NULL entries were detected, some allocations must have failed */
-        printf("%s: insufficient memory\n",progname);
+        printf("%s: insufficient memory\n",PROGNAME);
         exitcode=1;
         goto exit;
 	}
@@ -258,10 +287,9 @@ int main(int argc, char **argv)
 
     /* special case: '--help' takes precedence over error reporting */
     if (help->count > 0) {
-        printf("Usage: %s", progname);
+		printf("Usage: %s", PROGNAME);
         arg_print_syntax(stdout,argtable,"\n");
-        printf("A client that sends udp-packets to a udp-server which controls\n");
-		printf("the EIWOMISA controller over RS-232\n");
+        printf("A UDP-client that sends messages to the eiwomisarc_server\n");
         arg_print_glossary(stdout,argtable,"  %-25s %s\n");
         exitcode=0;
         goto exit;
@@ -269,39 +297,42 @@ int main(int argc, char **argv)
 
     /* special case: '--version' takes precedence error reporting */
     if (version->count > 0) {
-        printf("'%s' version 0.1\n",progname);
-        printf("A client that sends udp-packets to a udp-server which controls\n");
-		printf("the EIWOMISA controller over RS-232\n");
-        printf("September 2009, Kai Hermann\n");
-        exitcode=0;
+		printf("'%s' version ",PROGNAME);
+		printf(VERSION);
+		printf("\nGIT-REVISION: ");
+		printf(GITREV);
+        printf("A UDP-client that sends messages to the eiwomisarc_server\n");
+        printf(COPYRIGHT);
+		printf("\n");
+		exitcode=0;
         goto exit;
 	}
 
     /* If the parser returned any errors then display them and exit */
     if (nerrors > 0) {
         /* Display the error details contained in the arg_end struct.*/
-        arg_print_errors(stdout,end,progname);
-        printf("Try '%s --help' for more information.\n",progname);
+        arg_print_errors(stdout,end,PROGNAME);
+        printf("Try '%s --help' for more information.\n",PROGNAME);
         exitcode=1;
         goto exit;
 	}
 
     /* special case: uname with no command line options induces brief help */
     if (argc==1) {
-        printf("Try '%s --help' for more information.\n",progname);
+        printf("Try '%s --help' for more information.\n",PROGNAME);
         exitcode=0;
         goto exit;
 	}
 
 	/* special case: more values than channels & channels > 0 */
 	if( (channels->count != values->count) && (channels->count > 0) ) {
-		printf("Number of specified channels does not match the number of specified values!\n",progname);
+		printf("Number of channels does not match the number of values!\n",PROGNAME);
         exitcode=1;
 	}
 
 	/* special case: values or channels + mixed mode */
 	if( (mixed->count > 0) && ( (channels->count > 0) || (values->count > 0) ) ) {
-		printf("Please do not mix --values or --channels with --mixed!\n",progname);
+		printf("Please do not mix --values or --channels with --mixed!\n",PROGNAME);
         exitcode=1;
 		goto exit;
 	}
@@ -318,7 +349,7 @@ int main(int argc, char **argv)
 	if(serverport->count>0)
 		i_serverport = (int)serverport->ival[0];
 
-	exitcode = mymain(progname, c_serverip, i_serverport, values, channels, mixed);
+	exitcode = mymain(PROGNAME, c_serverip, i_serverport, values, channels, mixed);
 
 exit:
     /* deallocate each non-null entry in argtable[] */
