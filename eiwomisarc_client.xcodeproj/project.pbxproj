@@ -1,0 +1,257 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8DD76FAC0486AB0100D96B5E /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* main.c */; settings = {ATTRIBUTES = (); }; };
+		AC9AC4C81052DB2F004BB8C5 /* arg_date.c in Sources */ = {isa = PBXBuildFile; fileRef = AC9AC4B81052DB2F004BB8C5 /* arg_date.c */; };
+		AC9AC4C91052DB2F004BB8C5 /* arg_dbl.c in Sources */ = {isa = PBXBuildFile; fileRef = AC9AC4B91052DB2F004BB8C5 /* arg_dbl.c */; };
+		AC9AC4CA1052DB2F004BB8C5 /* arg_end.c in Sources */ = {isa = PBXBuildFile; fileRef = AC9AC4BA1052DB2F004BB8C5 /* arg_end.c */; };
+		AC9AC4CB1052DB2F004BB8C5 /* arg_file.c in Sources */ = {isa = PBXBuildFile; fileRef = AC9AC4BB1052DB2F004BB8C5 /* arg_file.c */; };
+		AC9AC4CC1052DB2F004BB8C5 /* arg_int.c in Sources */ = {isa = PBXBuildFile; fileRef = AC9AC4BC1052DB2F004BB8C5 /* arg_int.c */; };
+		AC9AC4CD1052DB2F004BB8C5 /* arg_lit.c in Sources */ = {isa = PBXBuildFile; fileRef = AC9AC4BD1052DB2F004BB8C5 /* arg_lit.c */; };
+		AC9AC4CE1052DB2F004BB8C5 /* arg_rem.c in Sources */ = {isa = PBXBuildFile; fileRef = AC9AC4BE1052DB2F004BB8C5 /* arg_rem.c */; };
+		AC9AC4CF1052DB2F004BB8C5 /* arg_rex.c in Sources */ = {isa = PBXBuildFile; fileRef = AC9AC4BF1052DB2F004BB8C5 /* arg_rex.c */; };
+		AC9AC4D01052DB2F004BB8C5 /* arg_str.c in Sources */ = {isa = PBXBuildFile; fileRef = AC9AC4C01052DB2F004BB8C5 /* arg_str.c */; };
+		AC9AC4D11052DB2F004BB8C5 /* argtable2.c in Sources */ = {isa = PBXBuildFile; fileRef = AC9AC4C11052DB2F004BB8C5 /* argtable2.c */; };
+		AC9AC4D21052DB2F004BB8C5 /* getopt.c in Sources */ = {isa = PBXBuildFile; fileRef = AC9AC4C51052DB2F004BB8C5 /* getopt.c */; };
+		AC9AC4D31052DB2F004BB8C5 /* getopt1.c in Sources */ = {isa = PBXBuildFile; fileRef = AC9AC4C71052DB2F004BB8C5 /* getopt1.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8DD76FAF0486AB0100D96B5E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		08FB7796FE84155DC02AAC07 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		8DD76FB20486AB0100D96B5E /* eiwomisarc_client */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = eiwomisarc_client; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC9AC4B81052DB2F004BB8C5 /* arg_date.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = arg_date.c; path = argtable2/arg_date.c; sourceTree = "<group>"; };
+		AC9AC4B91052DB2F004BB8C5 /* arg_dbl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = arg_dbl.c; path = argtable2/arg_dbl.c; sourceTree = "<group>"; };
+		AC9AC4BA1052DB2F004BB8C5 /* arg_end.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = arg_end.c; path = argtable2/arg_end.c; sourceTree = "<group>"; };
+		AC9AC4BB1052DB2F004BB8C5 /* arg_file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = arg_file.c; path = argtable2/arg_file.c; sourceTree = "<group>"; };
+		AC9AC4BC1052DB2F004BB8C5 /* arg_int.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = arg_int.c; path = argtable2/arg_int.c; sourceTree = "<group>"; };
+		AC9AC4BD1052DB2F004BB8C5 /* arg_lit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = arg_lit.c; path = argtable2/arg_lit.c; sourceTree = "<group>"; };
+		AC9AC4BE1052DB2F004BB8C5 /* arg_rem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = arg_rem.c; path = argtable2/arg_rem.c; sourceTree = "<group>"; };
+		AC9AC4BF1052DB2F004BB8C5 /* arg_rex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = arg_rex.c; path = argtable2/arg_rex.c; sourceTree = "<group>"; };
+		AC9AC4C01052DB2F004BB8C5 /* arg_str.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = arg_str.c; path = argtable2/arg_str.c; sourceTree = "<group>"; };
+		AC9AC4C11052DB2F004BB8C5 /* argtable2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = argtable2.c; path = argtable2/argtable2.c; sourceTree = "<group>"; };
+		AC9AC4C21052DB2F004BB8C5 /* argtable2.def */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = argtable2.def; path = argtable2/argtable2.def; sourceTree = "<group>"; };
+		AC9AC4C31052DB2F004BB8C5 /* argtable2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = argtable2.h; path = argtable2/argtable2.h; sourceTree = "<group>"; };
+		AC9AC4C41052DB2F004BB8C5 /* config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.h.in; path = argtable2/config.h.in; sourceTree = "<group>"; };
+		AC9AC4C51052DB2F004BB8C5 /* getopt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = getopt.c; path = argtable2/getopt.c; sourceTree = "<group>"; };
+		AC9AC4C61052DB2F004BB8C5 /* getopt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = getopt.h; path = argtable2/getopt.h; sourceTree = "<group>"; };
+		AC9AC4C71052DB2F004BB8C5 /* getopt1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = getopt1.c; path = argtable2/getopt1.c; sourceTree = "<group>"; };
+		C6A0FF2C0290799A04C91782 /* udp_client_cmd.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = udp_client_cmd.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DD76FAD0486AB0100D96B5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* udp_client_cmd */ = {
+			isa = PBXGroup;
+			children = (
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = udp_client_cmd;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				AC9AC4B81052DB2F004BB8C5 /* arg_date.c */,
+				AC9AC4B91052DB2F004BB8C5 /* arg_dbl.c */,
+				AC9AC4BA1052DB2F004BB8C5 /* arg_end.c */,
+				AC9AC4BB1052DB2F004BB8C5 /* arg_file.c */,
+				AC9AC4BC1052DB2F004BB8C5 /* arg_int.c */,
+				AC9AC4BD1052DB2F004BB8C5 /* arg_lit.c */,
+				AC9AC4BE1052DB2F004BB8C5 /* arg_rem.c */,
+				AC9AC4BF1052DB2F004BB8C5 /* arg_rex.c */,
+				AC9AC4C01052DB2F004BB8C5 /* arg_str.c */,
+				AC9AC4C11052DB2F004BB8C5 /* argtable2.c */,
+				AC9AC4C21052DB2F004BB8C5 /* argtable2.def */,
+				AC9AC4C31052DB2F004BB8C5 /* argtable2.h */,
+				AC9AC4C41052DB2F004BB8C5 /* config.h.in */,
+				AC9AC4C51052DB2F004BB8C5 /* getopt.c */,
+				AC9AC4C61052DB2F004BB8C5 /* getopt.h */,
+				AC9AC4C71052DB2F004BB8C5 /* getopt1.c */,
+				08FB7796FE84155DC02AAC07 /* main.c */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DD76FB20486AB0100D96B5E /* eiwomisarc_client */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				C6A0FF2C0290799A04C91782 /* udp_client_cmd.1 */,
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8DD76FA90486AB0100D96B5E /* eiwomisarc_client */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "eiwomisarc_client" */;
+			buildPhases = (
+				8DD76FAB0486AB0100D96B5E /* Sources */,
+				8DD76FAD0486AB0100D96B5E /* Frameworks */,
+				8DD76FAF0486AB0100D96B5E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = eiwomisarc_client;
+			productInstallPath = "$(HOME)/bin";
+			productName = udp_client_cmd;
+			productReference = 8DD76FB20486AB0100D96B5E /* eiwomisarc_client */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "eiwomisarc_client" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* udp_client_cmd */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8DD76FA90486AB0100D96B5E /* eiwomisarc_client */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DD76FAB0486AB0100D96B5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DD76FAC0486AB0100D96B5E /* main.c in Sources */,
+				AC9AC4C81052DB2F004BB8C5 /* arg_date.c in Sources */,
+				AC9AC4C91052DB2F004BB8C5 /* arg_dbl.c in Sources */,
+				AC9AC4CA1052DB2F004BB8C5 /* arg_end.c in Sources */,
+				AC9AC4CB1052DB2F004BB8C5 /* arg_file.c in Sources */,
+				AC9AC4CC1052DB2F004BB8C5 /* arg_int.c in Sources */,
+				AC9AC4CD1052DB2F004BB8C5 /* arg_lit.c in Sources */,
+				AC9AC4CE1052DB2F004BB8C5 /* arg_rem.c in Sources */,
+				AC9AC4CF1052DB2F004BB8C5 /* arg_rex.c in Sources */,
+				AC9AC4D01052DB2F004BB8C5 /* arg_str.c in Sources */,
+				AC9AC4D11052DB2F004BB8C5 /* argtable2.c in Sources */,
+				AC9AC4D21052DB2F004BB8C5 /* getopt.c in Sources */,
+				AC9AC4D31052DB2F004BB8C5 /* getopt1.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB928608733DD80010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				PRODUCT_NAME = eiwomisarc_client;
+			};
+			name = Debug;
+		};
+		1DEB928708733DD80010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PRODUCT_NAME = eiwomisarc_client;
+			};
+			name = Release;
+		};
+		1DEB928A08733DD80010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.5;
+			};
+			name = Debug;
+		};
+		1DEB928B08733DD80010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.5;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "eiwomisarc_client" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB928608733DD80010E9CD /* Debug */,
+				1DEB928708733DD80010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "eiwomisarc_client" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB928A08733DD80010E9CD /* Debug */,
+				1DEB928B08733DD80010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}
