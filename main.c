@@ -2,7 +2,7 @@
  * eiwomisarc_client:	A UDP-client that sends messages
  *						to the eiwomisarc_server
  *****************************************************************************
- * Copyright (C) 2009 Kai Hermann
+ * Copyright (C) 2009-2010 Kai Hermann
  *
  * Authors: Kai Hermann <kai.uwe.hermann at gmail dot com>
  *
@@ -23,10 +23,12 @@
 
 #include "git_rev.h"
 
-#define VERSION "0.1"
-#define PROGNAME "eiwomisarc_server"
-#define COPYRIGHT "September-October 2009, Kai Hermann"
-#define DEBUG 1
+#define VERSION "0.2"
+#define PROGNAME "eiwomisarc_client"
+#define COPYRIGHT "2009-2010, Kai Hermann"
+
+#define EIWOMISA 0
+#define ARTNET 1
 
 #include <stdio.h>
 #include <sys/socket.h>
@@ -35,6 +37,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <netinet/in.h>
+
+#include "debug.h"
 
 /* argtable */
 #include "argtable2/argtable2.h"
@@ -62,8 +66,7 @@ void die(char *message)
 int split(char *str, int size, int *rueck)
 {	
 	char *p;
-	printf("Split \"%s\" in tokens:\n", str); /* debug */
-	
+	msg_Dbg("Split \"%s\" in tokens:", str);
 	p = strtok(str,",");
 	
 	int i=0;
@@ -71,7 +74,7 @@ int split(char *str, int size, int *rueck)
 	while( (p != NULL) && (i < size) )
 	{
 		rueck[i] = atoi(p);
-		printf ("%s\n", p); /* debug */
+		msg_Dbg("%s", p); /* debug */
 		p = strtok (NULL, " ,");
 		i++;
 	}
@@ -111,6 +114,49 @@ void fillsending(int val, int ch, int *psending)
 		psending[3] = ch;		/* Channel1 */
 		psending[4] = 0;		/* Channel2 */
 		psending[5] = 0;		/* Channel3 */
+	}
+}
+
+/* FIXME: ARTNET Protocol */
+void fill_artnet(int *val, int channel, int *data) {
+
+	// ID
+	data[0] = 'A';
+	data[1] = 'r';
+	data[2] = 't';
+	data[3] = '-';
+	data[4] = 'N';
+	data[5] = 'e';
+	data[6] = 't';
+	data[7] = 0x00;
+
+	// OpCode
+	data[8] = 0x00;
+	data[9] = 0x50;
+
+	// ProtVerH
+	data[10] = 0x00;
+	//ProtVer
+	data[11] = 0x0E;
+
+	// Sequence
+	data[12] = 0x00;
+
+	// Physical
+	data[13] = 0x00;
+
+	// Universe
+	data[14] = 0x00; // <- Universe Setting
+	data[15] = 0x00;
+
+	// LengthHi
+	data[16] = (channel / 0xFF); // Length High Byte
+	// Length
+	data[17] = (channel % 0xFF); // Length Low Byte
+
+	// Data[Length]
+	for (int i = 0; i < channel; i++) {
+		data[18 + i] = val[i]; // Insert useful data here ;)
 	}
 }
 
@@ -222,6 +268,12 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
 				fillsending(i_values[i], i, sending);
 				sendoverudp(ip, port, sending);
 			}
+			int sending_artnet[531];
+			fill_artnet(i_values, packets, sending_artnet);
+			if(packets>1)
+			{
+				packets=1;
+			}
 		}
 	}else if(mixed->count>0) { /* fixme! */
 		/* mixed-mode "hell yeah" */
@@ -301,7 +353,7 @@ int main(int argc, char **argv)
 		printf(VERSION);
 		printf("\nGIT-REVISION: ");
 		printf(GITREV);
-        printf("A UDP-client that sends messages to the eiwomisarc_server\n");
+        printf("\nA UDP-client that sends messages to the eiwomisarc_server\n");
         printf(COPYRIGHT);
 		printf("\n");
 		exitcode=0;
