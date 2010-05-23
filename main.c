@@ -196,28 +196,19 @@ void sendoverudp(char *pip, int pport, int *psending)
 
 int mymain(const char* progname, char *ip, int port, struct arg_str *values, struct arg_str *channels, struct arg_str *mixed)
 {
-	//FIXME: request_twitter();
-	
 	/* check if ip & port are set, otherwise use defaults */
 	if(ip == NULL) {
-		printf("No Server specified - trying localhost...\n",progname);
+		msg_Info("No Server set - trying localhost...");
 		ip = "127.0.0.1";
 	}
 	if(port == -1) {
-		printf("No Port specified - using 1337.\n",progname);
+		msg_Info("No Port set - using 1337.");
 		port = 1337;
 	}
 
 	/* init sending array */
 	int sending[6];
 	sending[0] = 255; /* Startbyte */
-
-	/* still needed? FIXME! 
-	//sending[1] = 254; //Values1
-	//sending[2] = 1;   //Values2
-	//sending[3] = 0;   //Channel1
-	//sending[4] = 0;   //Channel2
-	//sending[5] = 0;   //Channel3 */
 
 	int packets = 0;
 	int channels_count = 0;
