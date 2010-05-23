@@ -296,6 +296,10 @@ int mymain(const char* progname, char *ip, int port, struct arg_str *values, str
     return 0;
 }
 
+int moodmode(const char* progname, char *ip, int port) {
+	msg_Dbg("moodmode enabled");
+	return 0;
+}
 
 int main(int argc, char **argv)
 {	
@@ -321,6 +325,7 @@ int main(int argc, char **argv)
 
     int nerrors;
     int exitcode=0;
+	int mode = 1;
 
     /* verify the argtable[] entries were allocated sucessfully */
     if (arg_nullcheck(argtable) != 0) {
@@ -400,7 +405,18 @@ int main(int argc, char **argv)
 	if(serverport->count>0)
 		i_serverport = (int)serverport->ival[0];
 
-	exitcode = mymain(PROGNAME, c_serverip, i_serverport, values, channels, mixed);
+	if (worldmood->count > 0) {
+		mode = 1;
+	}
+
+	switch (mode) {
+		case 1:
+			exitcode = moodmode(PROGNAME, c_serverip, i_serverport);
+			break;
+		default:
+			exitcode = mymain(PROGNAME, c_serverip, i_serverport, values, channels, mixed);
+			break;
+	}
 
 exit:
     /* deallocate each non-null entry in argtable[] */
