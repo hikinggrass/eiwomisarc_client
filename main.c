@@ -319,7 +319,7 @@ int main(int argc, char **argv)
 
     int nerrors;
     int exitcode=0;
-	int mode = 1;
+	int mode = 0; /* 0 = normal, 1 = moodmode */
 
     /* verify the argtable[] entries were allocated sucessfully */
     if (arg_nullcheck(argtable) != 0) {
