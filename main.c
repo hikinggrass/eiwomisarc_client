@@ -319,9 +319,12 @@ int main(int argc, char **argv)
     struct arg_lit  *help    = arg_lit0("hH","help",                    "print this help and exit");
     struct arg_lit  *version = arg_lit0(NULL,"version",                 "print version information and exit");
 
+	struct arg_lit  *debug = arg_lit0(NULL,"debug","print debug messages");
+    struct arg_lit  *silent = arg_lit0(NULL,"silent","print no messages");
+
     struct arg_end  *end     = arg_end(20);
 
-    void* argtable[] = {serverip,serverport,values,channels,mixed,worldmood,help,version,end};    
+    void* argtable[] = {serverip,serverport,values,channels,mixed,worldmood,help,version,debug,silent,end};
 
     int nerrors;
     int exitcode=0;
@@ -404,6 +407,18 @@ int main(int argc, char **argv)
 	int i_serverport = -1;
 	if(serverport->count>0)
 		i_serverport = (int)serverport->ival[0];
+
+	/* --debug enables debug messages */
+    if (debug->count > 0) {
+		printf("debug messages enabled\n");
+		msglevel = 3;
+	}
+
+	/* --silent disables all (!) messages */
+    if (silent->count > 0) {
+		printf("i'll be silent now...\n");
+		msglevel = 0;
+	}
 
 	if (worldmood->count > 0) {
 		mode = 1;
