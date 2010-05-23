@@ -194,7 +194,7 @@ void sendoverudp(char *pip, int pport, int *psending)
 }
 
 
-int mymain(const char* progname, char *ip, int port, struct arg_str *values, struct arg_str *channels, struct arg_str *mixed)
+int normalmode(const char* progname, char *ip, int port, struct arg_str *values, struct arg_str *channels, struct arg_str *mixed)
 {
 	/* check if ip & port are set, otherwise use defaults */
 	if(ip == NULL) {
@@ -420,7 +420,7 @@ int main(int argc, char **argv)
 			exitcode = moodmode(PROGNAME, c_serverip, i_serverport);
 			break;
 		default:
-			exitcode = mymain(PROGNAME, c_serverip, i_serverport, values, channels, mixed);
+			exitcode = normalmode(PROGNAME, c_serverip, i_serverport, values, channels, mixed);
 			break;
 	}
 
