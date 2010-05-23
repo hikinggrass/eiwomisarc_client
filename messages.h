@@ -1,5 +1,5 @@
 /*****************************************************************************
- * debug.h:	show debug messages
+ * messages.h: show messages
  *****************************************************************************
  * Copyright (C) 2010 Kai Hermann
  *
@@ -22,12 +22,12 @@
 
 #include <stdarg.h>
 
-/* FIXME! parse msglevel parameter, default 2 = error&debug messages*/
+/* FIXME! parse msglevel parameter, default 2 = error&info messages*/
 int msglevel = 2;
 
 void msg_Dbg(char *fmt, ...)
 {
-	if (msglevel>1) {
+	if (msglevel>2) {
 		va_list argp;
 		printf("debug: ");
 		va_start(argp, fmt);
@@ -35,4 +35,34 @@ void msg_Dbg(char *fmt, ...)
 		va_end(argp);
 		printf("\n");
 	}
+}
+
+void msg_Info(char *fmt, ...)
+{
+	if (msglevel>1) {
+		va_list argp;
+		printf("info: ");
+		va_start(argp, fmt);
+		vprintf(fmt, argp);
+		va_end(argp);
+		printf("\n");
+	}
+}
+
+void msg_Err(char *fmt, ...)
+{
+	if (msglevel>0) {
+		va_list argp;
+		printf("ERROR: ");
+		va_start(argp, fmt);
+		vprintf(fmt, argp);
+		va_end(argp);
+		printf("\n");
+	}
+}
+
+void die(char *message)
+{
+	perror(message);
+	exit(1);
 }

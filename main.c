@@ -23,6 +23,8 @@
 
 #include "git_rev.h"
 
+#include "worldmood.h"
+
 #define VERSION "0.2"
 #define PROGNAME "eiwomisarc_client"
 #define COPYRIGHT "2009-2010, Kai Hermann"
@@ -38,7 +40,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 
-#include "debug.h"
+#include "messages.h"
 
 /* argtable */
 #include "argtable2/argtable2.h"
@@ -55,12 +57,6 @@ unsigned char itouc(int pInt)
 {
 	unsigned char byte;
 	return byte = ( unsigned char ) ( pInt );
-}
-
-void die(char *message)
-{
-	perror(message);
-	exit(1);
 }
 
 int split(char *str, int size, int *rueck)
@@ -200,6 +196,8 @@ void sendoverudp(char *pip, int pport, int *psending)
 
 int mymain(const char* progname, char *ip, int port, struct arg_str *values, struct arg_str *channels, struct arg_str *mixed)
 {
+	//FIXME: request_twitter();
+	
 	/* check if ip & port are set, otherwise use defaults */
 	if(ip == NULL) {
 		printf("No Server specified - trying localhost...\n",progname);
@@ -312,13 +310,14 @@ int main(int argc, char **argv)
 	struct arg_str *channels = arg_strn("cC","channels","",0,1,"up to 4 channels separated by ',' - range 0-512, default 0-3");
 	struct arg_str *mixed = arg_strn("mM","mixed","",0,1,"set values for corresponding channels. Format: <channel0>,<value0>,<channel1>,[...]");
 
+	struct arg_lit  *worldmood = arg_lit0(NULL,"mood",                 "experimental (twitter) worldmood mode");
 
     struct arg_lit  *help    = arg_lit0("hH","help",                    "print this help and exit");
     struct arg_lit  *version = arg_lit0(NULL,"version",                 "print version information and exit");
 
     struct arg_end  *end     = arg_end(20);
 
-    void* argtable[] = {serverip,serverport,values,channels,mixed,help,version,end};    
+    void* argtable[] = {serverip,serverport,values,channels,mixed,worldmood,help,version,end};    
 
     int nerrors;
     int exitcode=0;
