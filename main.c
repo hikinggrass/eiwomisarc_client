@@ -23,20 +23,22 @@
 
 #include "git_rev.h"
 
-#define VERSION "0.2"
+#define VERSION "0.3"
 #define PROGNAME "eiwomisarc_client"
-#define COPYRIGHT "2009-2010, Kai Hermann"
+#define COPYRIGHT "2009-2011, Kai Hermann"
 
 #define EIWOMISA 0
 #define ARTNET 1
 
-//#include <stdio.h>
-//#include <sys/socket.h>
-//#include <arpa/inet.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <unistd.h>
-//#include <netinet/in.h>
+#define NULL ((void*)0) 
+
+#include <stdio.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <netinet/in.h>
 
 #include "messages.h"
 
@@ -138,7 +140,8 @@ void fill_artnet(int *val, int channel, int *data) {
 	data[17] = (channel % 0xFF); // Length Low Byte
 	
 	// Data[Length]
-	for (int i = 0; i < channel; i++) {
+	int i;
+	for (i = 0; i < channel; i++) {
 		data[18 + i] = val[i]; // Insert useful data here ;)
 	}
 }
@@ -152,7 +155,8 @@ void sendoverudp(char *pip, int pport, int *psending)
 	unsigned char transmit[6];
 	
 	/* convert psending int -> unsigned char for transmission */
-	for(int i=0; i<6; i++) {
+	int i;
+	for(i=0; i<6; i++) {
 		transmit[i] = itouc(psending[i]);
 	}
 	
