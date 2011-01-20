@@ -87,13 +87,15 @@ int normalmode(const char* progname, char *ip, int port, struct arg_str *values,
 
 			if(channels->count>=packets) {
 				/* use only as many values as channels */
-				for(int i=0; i<packets; i++) {
+				int i;
+				for(i=0; i<packets; i++) {
 					fillsending(i_values[i], i_channels[i], sending);
 					sendoverudp(ip, port, sending);
 				}
 			}else if(channels->count<packets) {
 				/* use only as many values as channels */
-				for(int i=0; i<channels->count; i++) {
+				int i;
+				for(i=0; i<channels->count; i++) {
 					fillsending(i_values[i], i_channels[i], sending);
 					sendoverudp(ip, port, sending);
 				}
@@ -103,7 +105,8 @@ int normalmode(const char* progname, char *ip, int port, struct arg_str *values,
 			}
 		}else {
 			/* default-channels */
-			for(int i=0; i<packets; i++) {
+			int i;
+			for(i=0; i<packets; i++) {
 				fillsending(i_values[i], i, sending);
 				sendoverudp(ip, port, sending);
 			}
@@ -128,8 +131,8 @@ int normalmode(const char* progname, char *ip, int port, struct arg_str *values,
 		
 		if( (packets%2) > 0)
 			packets -= 1;
-		
-		for(int i=0; i<packets; i=i+2) {
+		int i;
+		for(i=0; i<packets; i=i+2) {
 			fillsending(i_values[i], i, sending);
 			sendoverudp(ip, port, sending);
 		}
