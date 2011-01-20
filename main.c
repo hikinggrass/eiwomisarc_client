@@ -69,9 +69,9 @@ int split(char *str, int size, int *rueck)
 void fillsending(int val, int ch, int *psending)
 {
 	/* negative value = random value! */
-	if(val<0) {
-		val = irand(0, 255);
-	}
+	//if(val<0) {
+	//	val = irand(0, 255);
+	//}
 	
 	/* value */
 	if(val>254) {
