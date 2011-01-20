@@ -23,8 +23,6 @@
 
 #include "git_rev.h"
 
-#include "worldmood.h"
-
 #define VERSION "0.2"
 #define PROGNAME "eiwomisarc_client"
 #define COPYRIGHT "2009-2010, Kai Hermann"
@@ -139,11 +137,6 @@ int normalmode(const char* progname, char *ip, int port, struct arg_str *values,
     return 0;
 }
 
-int moodmode(const char* progname, char *ip, int port) {
-	msg_Dbg("moodmode enabled");
-	return 0;
-}
-
 int main(int argc, char **argv)
 {	
 	/* init random number generator */
@@ -157,8 +150,6 @@ int main(int argc, char **argv)
 	struct arg_str *channels = arg_strn("cC","channels","",0,1,"up to 4 channels separated by ',' - range 0-512, default 0-3");
 	struct arg_str *mixed = arg_strn("mM","mixed","",0,1,"set values for corresponding channels. Format: <channel0>,<value0>,<channel1>,[...]");
 
-	struct arg_lit  *worldmood = arg_lit0(NULL,"mood",                 "experimental (twitter) worldmood mode");
-
     struct arg_lit  *help    = arg_lit0("hH","help",                    "print this help and exit");
     struct arg_lit  *version = arg_lit0(NULL,"version",                 "print version information and exit");
 
@@ -167,11 +158,10 @@ int main(int argc, char **argv)
 
     struct arg_end  *end     = arg_end(20);
 
-    void* argtable[] = {serverip,serverport,values,channels,mixed,worldmood,help,version,debug,silent,end};
+    void* argtable[] = {serverip,serverport,values,channels,mixed,help,version,debug,silent,end};
 
     int nerrors;
     int exitcode=0;
-	int mode = 0; /* 0 = normal, 1 = moodmode */
 
     /* verify the argtable[] entries were allocated sucessfully */
     if (arg_nullcheck(argtable) != 0) {
@@ -262,19 +252,8 @@ int main(int argc, char **argv)
 		printf("i'll be silent now...\n");
 		msglevel = 0;
 	}
-
-	if (worldmood->count > 0) {
-		mode = 1;
-	}
-
-	switch (mode) {
-		case 1:
-			exitcode = moodmode(PROGNAME, c_serverip, i_serverport);
-			break;
-		default:
-			exitcode = normalmode(PROGNAME, c_serverip, i_serverport, values, channels, mixed);
-			break;
-	}
+	
+	exitcode = normalmode(PROGNAME, c_serverip, i_serverport, values, channels, mixed);
 
 exit:
     /* deallocate each non-null entry in argtable[] */
